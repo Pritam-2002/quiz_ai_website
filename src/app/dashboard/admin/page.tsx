@@ -39,6 +39,7 @@ export default function AdminPanel() {
             });
 
             const data = await res.json();
+            console.log(data);
             if (!data.questions || data.questions.length === 0) {
                 alert("No questions generated. Try a different topic.");
                 return;
