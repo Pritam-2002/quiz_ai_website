@@ -11,6 +11,7 @@ export interface User {
 
 interface AuthContextType {
     user: User | null;
+    token: string | null;
     isAuthenticated: boolean;
     login: (user: User, token: string) => void;
     logout: () => void;
@@ -20,6 +21,7 @@ export const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const [user, setUser] = useState<User | null>(null);
+    const [token, setToken] = useState<string | null>(null);
     const [isAuthenticated, setIsAuthenticated] = useState(false);
 
     // Restore session on reload
@@ -35,20 +37,25 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     const login = (user: User, token: string) => {
         setUser(user);
+        setToken(token);
         setIsAuthenticated(true);
+
         localStorage.setItem("user", JSON.stringify(user));
         localStorage.setItem("token", token);
+
     };
 
     const logout = () => {
         setUser(null);
+        setToken(null);
         setIsAuthenticated(false);
+
         localStorage.removeItem("user");
         localStorage.removeItem("token");
     };
 
     return (
-        <AuthContext.Provider value={{ user, isAuthenticated, login, logout }}>
+        <AuthContext.Provider value={{ user, isAuthenticated, login, logout, token }}>
             {children}
         </AuthContext.Provider>
     );
