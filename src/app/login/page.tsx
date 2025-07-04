@@ -1,13 +1,11 @@
 "use client";
 
 import { useState } from "react";
+import { LoginFormProps } from "../../../types/auth.types";
 
-interface LoginFormProps {
-    onLogin: (email: string, password: string) => Promise<void>;
-    onSwitchToSignup: () => void;
-}
 
-const LoginForm = ({ onLogin, onSwitchToSignup }: LoginFormProps) => {
+
+const LoginForm: React.FC<LoginFormProps> = ({ onLogin, onSwitchToSignup }) => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [errorMsg, setErrorMsg] = useState("");

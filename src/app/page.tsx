@@ -7,18 +7,19 @@ import { useAuth } from "@/hooks/useAuth";
 import { useRouter } from "next/navigation";
 import { API_URL } from "../../config/config";
 
+
 const AuthPage = () => {
   const [isLogin, setIsLogin] = useState(true);
   const { login } = useAuth();
   const router = useRouter();
 
-  const handleLogin = async (email: string, password: string) => {
-    const res = await fetch(`http://localhost:7000/api/auth/signin`, {
+  const handleLogin = async (email: string, password: string): Promise<void> => {
+    const res = await fetch(`${API_URL}/auth/signin`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password }),
     });
-    console.log(res);
+    console.log("Signin API Response checking==>", res);
 
     const data = await res.json();
 
@@ -35,14 +36,13 @@ const AuthPage = () => {
     }
   };
 
-  const handleSignup = async (
-    name: string,
+  const handleSignup = async (name: string,
     email: string,
     password: string,
     currentGrade?: string,
     country?: string,
-    phoneNumber?: string
-  ) => {
+    phoneNumber?: string): Promise<void> => {
+
     const res = await fetch(`${API_URL}/auth/signup`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
