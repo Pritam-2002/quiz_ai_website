@@ -32,7 +32,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLogin, onSwitchToSignup }) => {
 
     return (
         <div className="w-full max-w-md mx-auto mt-10 bg-white shadow-md rounded-md p-6">
-            <h2 className="text-2xl font-bold text-center mb-2">Welcome Back</h2>
+            <h2 className="text-2xl font-bold text-black text-center mb-2">Welcome Back</h2>
             {errorMsg && <p className="text-red-600 text-sm mb-4 text-center">{errorMsg}</p>}
             <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
@@ -46,12 +46,12 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLogin, onSwitchToSignup }) => {
                     />
                 </div>
                 <div>
-                    <label className="block text-sm font-medium text-gray-700">Password</label>
+                    <label className="block text-sm font-medium text-black">Password</label>
                     <input
                         type="password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none"
+                        className="w-full px-4 py-2 border text-black border-gray-300 rounded-md focus:outline-none"
                         required
                     />
                 </div>

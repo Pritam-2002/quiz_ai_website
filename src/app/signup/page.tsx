@@ -53,7 +53,7 @@ const SignupForm: React.FC<SignUpFormProps> = ({ onSignup, onSwitchToLogin }) =>
 
     return (
         <div className="w-full max-w-md mx-auto mt-10 bg-white shadow-md rounded-md p-6">
-            <h2 className="text-2xl font-bold text-center mb-2">Create Account</h2>
+            <h2 className="text-2xl font-bold text-center text-black mb-2">Create Account</h2>
             {errorMsg && <p className="text-red-600 text-sm mb-4 text-center">{errorMsg}</p>}
             {successMsg && <p className="text-green-600 text-sm mb-4 text-center">{successMsg}</p>}
             <form onSubmit={handleSubmit} className="space-y-4">
@@ -72,7 +72,7 @@ const SignupForm: React.FC<SignUpFormProps> = ({ onSignup, onSwitchToLogin }) =>
                             type={type}
                             value={(form as any)[name]}
                             onChange={handleChange}
-                            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-500"
+                            className="w-full px-4 py-2 border border-gray-300 rounded-md text-black focus:outline-none focus:ring focus:ring-blue-500"
                             required={["name", "email", "password"].includes(name)}
                         />
                     </div>

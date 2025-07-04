@@ -26,14 +26,15 @@ const AuthPage = () => {
     if (!data?.user || !data?.token) {
       throw new Error("Login failed");
     }
-
-    login(data.user, data.token);
-
     if (data.user.isAdmin) {
       router.push("/dashboard/admin");
     } else {
       router.push("/dashboard/user");
     }
+
+    login(data.user, data.token);
+
+
   };
 
   const handleSignup = async (name: string,

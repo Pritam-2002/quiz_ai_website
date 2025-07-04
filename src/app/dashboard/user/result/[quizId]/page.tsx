@@ -1,13 +1,26 @@
 "use client";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { GoogleGenerativeAI } from "@google/generative-ai";
+
 
 export default function ResultPage() {
+
+
+    const geminiApiKey = process.env.NEXT_PUBLIC_GEMINI_API_KEY;
+    if (!geminiApiKey) {
+        throw new Error("GEMINI_API_KEY environment variable is not set.");
+    }
+    const genAI = new GoogleGenerativeAI(geminiApiKey)
     const params = useParams();
     const router = useRouter();
     const quizId = params.quizId as string;
 
     const [data, setData] = useState<any>(null);
+    const [sidebarOpen, setSidebarOpen] = useState(false);
+    const [aiExplanation, setAiExplanation] = useState<string>("");
+    const [loadingExplanation, setLoadingExplanation] = useState(false);
+
 
     useEffect(() => {
         if (!quizId) return;
@@ -30,6 +43,29 @@ export default function ResultPage() {
     const { results, subject, type, timeTaken } = data;
     const correctCount = results.filter((q: any) => q.isCorrect).length;
     const formatTime = (sec: number) => `${Math.floor(sec / 60)}m ${sec % 60}s`;
+
+    const handleAnswerExplain = async (explanation: string) => {
+        setSidebarOpen(true);
+        setLoadingExplanation(true);
+        setAiExplanation("");
+
+        try {
+            const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+            const prompt = `Give a detailed explanation of this concept: ${explanation} with examples.`;
+
+            const result = await model.generateContent(prompt);
+            const text = result.response.text();
+            setAiExplanation(text);
+        } catch (error) {
+            console.error(error);
+            setAiExplanation("❌ Error fetching explanation.");
+        } finally {
+            setLoadingExplanation(false);
+        }
+    };
+
+
+
 
     return (
         <div className="p-6 max-w-5xl mx-auto space-y-6 bg-gradient-to-br from-blue-50 to-purple-100 min-h-screen">
@@ -78,7 +114,18 @@ export default function ResultPage() {
 
                     <div className="text-sm text-gray-700 mb-2">
                         <span className="font-semibold text-indigo-600">Explanation:</span> {q.explanation}
+
                     </div>
+                    <button
+                        onClick={() => handleAnswerExplain(q.explanation)}
+                        className="group relative inline-flex items-center justify-center px-6 py-3 overflow-hidden font-semibold text-indigo-800 transition-all duration-300 bg-yellow-200 rounded-xl shadow-md hover:bg-yellow-300 hover:shadow-lg hover:scale-105 mb-2"
+                    >
+                        <span className="absolute inset-0 w-full h-full bg-gradient-to-br from-yellow-100 to-yellow-300 opacity-0 group-hover:opacity-20 transition-all duration-300"></span>
+                        <span className="relative z-10 flex items-center gap-2">
+                            🤖 <span>Explain More with AI</span>
+                        </span>
+                    </button>
+
 
                     {!q.isCorrect && q.correctAnswer && (
                         <div className="text-sm text-red-700 font-semibold mb-2">
@@ -107,6 +154,32 @@ export default function ResultPage() {
                     🔙 Back to Dashboard
                 </button>
             </div>
+
+            {sidebarOpen && (
+                <div className="fixed top-0 right-0 h-full w-full sm:w-[400px] bg-white shadow-2xl z-50 transform transition-transform duration-300 ease-in-out">
+                    <div className="p-6 h-full flex flex-col">
+                        <div className="flex justify-between items-center mb-4">
+                            <h2 className="text-xl font-bold text-indigo-700">🤖 AI Explanation</h2>
+                            <button
+                                onClick={() => setSidebarOpen(false)}
+                                className="text-red-500 hover:text-red-700 text-2xl font-bold"
+                            >
+                                &times;
+                            </button>
+                        </div>
+
+                        <div className="overflow-y-auto flex-1 border-t pt-4 text-gray-800 text-sm">
+                            {loadingExplanation ? (
+                                <div className="text-center mt-10 animate-pulse text-indigo-500 font-semibold">
+                                    Generating explanation...
+                                </div>
+                            ) : (
+                                <pre className="whitespace-pre-wrap">{aiExplanation}</pre>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

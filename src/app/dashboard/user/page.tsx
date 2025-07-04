@@ -2,6 +2,8 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { API_URL } from "../../../../config/config";
+import Header from "@/components/client/header/Header";
+import NoQuiz from "@/components/client/noquiz/NoQuiz";
 
 interface QuizGroup {
     subject: string;
@@ -114,21 +116,11 @@ export default function UserDashboard() {
     return (
         <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-6">
             <div className="max-w-7xl mx-auto">
-                {/* Header */}
-                <div className="text-center mb-12">
-                    <h1 className="text-4xl font-bold text-gray-800 mb-2">
-                        🎯 Available Quizzes
-                    </h1>
-                    <p className="text-gray-600">Choose a subject to start your learning journey</p>
-                </div>
 
+                <Header />
                 {/* Quiz Cards */}
                 {quizzes.length === 0 ? (
-                    <div className="text-center py-12">
-                        <div className="text-6xl mb-4">📚</div>
-                        <h3 className="text-xl font-semibold text-gray-700 mb-2">No quizzes available</h3>
-                        <p className="text-gray-500">Check back later for new quizzes and practice papers!</p>
-                    </div>
+                    <NoQuiz />
                 ) : (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                         {quizzes.map((quiz: QuizGroup, index: number) => (
@@ -161,7 +153,7 @@ export default function UserDashboard() {
                                         </div>
                                     </div>
 
-                                    {/* Progress Bar */}
+
                                     <div className="mb-4">
                                         <div className="bg-gray-200 rounded-full h-2">
                                             <div
@@ -174,7 +166,7 @@ export default function UserDashboard() {
                                         </p>
                                     </div>
 
-                                    {/* Start Quiz Button */}
+
                                     <button
                                         onClick={() => handleStartQuiz(quiz.subject, quiz.type)}
                                         className="w-full bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white font-semibold py-3 px-4 rounded-xl transition-all duration-200 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 shadow-md hover:shadow-lg"
